@@ -1,5 +1,5 @@
 #include "BluetoothSerial.h"
-
+//Ensinando stark
 BluetoothSerial SerialBT;
 
 String comandoAtual = "";
