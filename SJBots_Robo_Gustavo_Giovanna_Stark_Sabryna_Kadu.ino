@@ -1,17 +1,17 @@
-#include "BluetoothSerial.h"
-//Ensinando stark
-BluetoothSerial SerialBT;
+#include <SoftwareSerial.h>
+
+SoftwareSerial SerialBT(10, 11); // RX, TX
 
 String comandoAtual = "";
 
 void setup() {
-  Serial.begin(115200);
-  SerialBT.begin("ESP32_BT");
-  Serial.println("ESP32 Bluetooth pronto");
+  Serial.begin(115200);      // USB
+  SerialBT.begin(9600);      // HC-05 padrão
+  Serial.println("Nano Bluetooth pronto");
 }
 
 void loop() {
-  // Atualiza comando apenas quando receber algo novo
+  // Atualiza comando quando recebe algo novo
   if (SerialBT.available()) {
     String recebido = SerialBT.readStringUntil('\n');
     recebido.trim();
@@ -23,7 +23,7 @@ void loop() {
     }
   }
 
-  // EXECUÇÃO CONTÍNUA DO COMANDO ATIVO
+  // EXECUÇÃO CONTÍNUA
   if (comandoAtual == "UP") {
     Serial.println("UP_OK");
     delay(200);
