@@ -1,11 +1,11 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial SerialBT(10, 11); // RX, TX
+SoftwareSerial SerialBT(11, 10); // RX, TX
 
 String comandoAtual = "";
 
 void setup() {
-  Serial.begin(115200);      // USB
+  Serial.begin(9600);      // USB
   SerialBT.begin(9600);      // HC-05 padrão
   Serial.println("Nano Bluetooth pronto");
 }
