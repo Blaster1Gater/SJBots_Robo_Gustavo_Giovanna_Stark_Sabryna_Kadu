@@ -1,43 +1,116 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial SerialBT(11, 10); // RX, TX
+SoftwareSerial SerialBT(6, 7); // RX, TX
+
+// HW-354 (L9110S)
+// Motor A
+#define A1 3  // PWM
+#define A2 2  // digital
+
+// Motor B
+#define B1 5  // PWM
+#define B2 4  // digital
+
+#define VELOCIDADE_PADRAO 50  // 0–100
 
 String comandoAtual = "";
+int velocidade = VELOCIDADE_PADRAO;
+int pwmVel = map(VELOCIDADE_PADRAO, 0, 100, 0, 255);
 
 void setup() {
-  Serial.begin(9600);      // USB
-  SerialBT.begin(9600);      // HC-05 padrão
+  Serial.begin(9600);
+  SerialBT.begin(9600);
+
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  pinMode(B1, OUTPUT);
+  pinMode(B2, OUTPUT);
+
+  pararMotores();
+
   Serial.println("Nano Bluetooth pronto");
+  Serial.print("Velocidade inicial: ");
+  Serial.println(velocidade);
 }
 
 void loop() {
-  // Atualiza comando quando recebe algo novo
   if (SerialBT.available()) {
     String recebido = SerialBT.readStringUntil('\n');
     recebido.trim();
 
-    if (recebido.length() > 0) {
+    if (recebido.startsWith("Speed_")) {
+      velocidade = recebido.substring(6).toInt();
+      velocidade = constrain(velocidade, 0, 100);
+      pwmVel = map(velocidade, 0, 100, 0, 255);
+
+      Serial.print("Velocidade: ");
+      Serial.println(velocidade);
+    }
+    else if (recebido.length() > 0) {
       comandoAtual = recebido;
       Serial.print("Comando ativo: ");
       Serial.println(comandoAtual);
     }
   }
 
-  // EXECUÇÃO CONTÍNUA
   if (comandoAtual == "UP") {
-    Serial.println("UP_OK");
-    delay(200);
+    frente();
   }
   else if (comandoAtual == "DOWN") {
-    Serial.println("DOWN_OK");
-    delay(200);
+    tras();
   }
   else if (comandoAtual == "LEFT") {
-    Serial.println("LEFT_OK");
-    delay(200);
+    esquerda();
   }
   else if (comandoAtual == "RIGHT") {
-    Serial.println("RIGHT_OK");
-    delay(200);
+    direita();
   }
+  else if (comandoAtual == "PARAR") {
+    pararMotores();
+  }
+  else if(comandoAtual == "LIGAR") {
+    ligar();
+  }
+}
+
+// ===== MOVIMENTOS COM PWM =====
+
+void frente() {
+  analogWrite(A1, pwmVel);
+  digitalWrite(A2, LOW);
+  analogWrite(B1, pwmVel);
+  digitalWrite(B2, LOW);
+}
+
+void tras() {
+  digitalWrite(A1, LOW);
+  analogWrite(A2, pwmVel);
+  digitalWrite(B1, LOW);
+  analogWrite(B2, pwmVel);
+}
+
+void esquerda() {
+  digitalWrite(A1, LOW);
+  analogWrite(A2, pwmVel);
+  analogWrite(B1, pwmVel);
+  digitalWrite(B2, LOW);
+}
+
+void direita() {
+  analogWrite(A1, pwmVel);
+  digitalWrite(A2, LOW);
+  digitalWrite(B1, LOW);
+  analogWrite(B2, pwmVel);
+}
+
+void ligar () {
+  velocidade = constrain(velocidade, 0, 100);
+  pwmVel = map(velocidade, 0, 100, 0, 255);
+}
+
+void pararMotores() {
+  digitalWrite(A1, LOW);
+  digitalWrite(A2, LOW);
+  digitalWrite(B1, LOW);
+  digitalWrite(B2, LOW);
 }
