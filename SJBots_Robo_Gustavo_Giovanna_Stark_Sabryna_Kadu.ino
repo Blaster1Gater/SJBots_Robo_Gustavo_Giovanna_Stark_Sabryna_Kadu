@@ -78,29 +78,29 @@ void loop() {
 void frente() {
   analogWrite(A1, pwmVel);
   digitalWrite(A2, LOW);
-  analogWrite(B1, pwmVel);
-  digitalWrite(B2, LOW);
+  analogWrite(B1, LOW);
+  digitalWrite(B2, pwmVel);
 }
 
 void tras() {
-  digitalWrite(A1, LOW);
-  analogWrite(A2, pwmVel);
-  digitalWrite(B1, LOW);
-  analogWrite(B2, pwmVel);
-}
-
-void esquerda() {
-  digitalWrite(A1, LOW);
-  analogWrite(A2, pwmVel);
+  analogWrite(A1, LOW);
+  digitalWrite(A2, pwmVel);
   analogWrite(B1, pwmVel);
   digitalWrite(B2, LOW);
 }
 
 void direita() {
-  analogWrite(A1, pwmVel);
+  analogWrite(A1, pwmVel * 0.3);
   digitalWrite(A2, LOW);
-  digitalWrite(B1, LOW);
-  analogWrite(B2, pwmVel);
+  analogWrite(B1, LOW);
+  digitalWrite(B2, LOW);
+}
+
+void esquerda() {
+  analogWrite(A1, LOW);
+  digitalWrite(A2, LOW);
+  analogWrite(B1, LOW);
+  digitalWrite(B2, pwmVel * 0.3);
 }
 
 void ligar () {
