@@ -90,7 +90,7 @@ void tras() {
 }
 
 void direita() {
-  analogWrite(A1, pwmVel * 0.3);
+  analogWrite(A1, pwmVel);
   digitalWrite(A2, LOW);
   analogWrite(B1, LOW);
   digitalWrite(B2, LOW);
@@ -100,7 +100,7 @@ void esquerda() {
   analogWrite(A1, LOW);
   digitalWrite(A2, LOW);
   analogWrite(B1, LOW);
-  digitalWrite(B2, pwmVel * 0.3);
+  digitalWrite(B2, pwmVel);
 }
 
 void ligar () {
